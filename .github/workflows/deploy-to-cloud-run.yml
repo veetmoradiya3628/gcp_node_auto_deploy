@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Checkout the code
+      # Checkout code
       - name: Checkout code
         uses: actions/checkout@v3
 
@@ -26,22 +26,22 @@ jobs:
         with:
           project_id: ${{ secrets.GCP_PROJECT_ID }}
 
-      # Authenticate Docker with Artifact Registry
-      - name: Authenticate Docker
+      # Authenticate Docker with GCR
+      - name: Authenticate Docker with GCR
         run: |
-          gcloud auth configure-docker us-docker.pkg.dev
+          gcloud auth configure-docker
 
-      # Build and Push Docker Image
-      - name: Build and Push Docker Image
+      # Build and Push Docker Image to GCR
+      - name: Build and Push Docker Image to GCR
         run: |
-          IMAGE_NAME="us-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/hello-node-backend/hello-node-backend"
+          IMAGE_NAME="gcr.io/${{ secrets.GCP_PROJECT_ID }}/hello-node-backend"
           docker build -t $IMAGE_NAME .
           docker push $IMAGE_NAME
 
       # Deploy to Cloud Run
       - name: Deploy to Cloud Run
         run: |
-          IMAGE_NAME="us-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/hello-node-backend/hello-node-backend"
+          IMAGE_NAME="gcr.io/${{ secrets.GCP_PROJECT_ID }}/hello-node-backend"
           gcloud run deploy hello-node-backend \
             --image $IMAGE_NAME \
             --platform managed \

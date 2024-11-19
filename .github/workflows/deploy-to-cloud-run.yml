@@ -20,12 +20,14 @@ jobs:
       
       # Authenticate Docker with GCP Artifact Registry
       - name: Authenticate Docker
-        run: gcloud auth configure-docker
+        run: |
+            gcloud auth configure-docker us-docker.pkg.dev
+
 
       # Build and Push Docker Image
       - name: Build and Push Docker Image
         run: |
-          IMAGE_NAME="gcr.io/${{ secrets.GCP_PROJECT_ID }}/hello-node-backend"
+          IMAGE_NAME="us-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/hello-node-backend"
           docker build -t $IMAGE_NAME .
           docker push $IMAGE_NAME
       
